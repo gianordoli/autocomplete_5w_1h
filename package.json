@@ -1,0 +1,27 @@
+{
+  "name": "autocomplete_archive",
+  "version": "0.0.0",
+  "description": "MFA Design and Technology, Parsons The New School for Design",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gianordoli/autocomplete_5w_1h.git"
+  },
+  "author": "Gabriel Gianordoli",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gianordoli/autocomplete_5w_1h/issues"
+  },
+  "homepage": "https://github.com/gianordoli/autocomplete_5w_1h",
+  "dependencies": {
+    "jsonfile": "^2.0.0",
+    "underscore": "^1.8.2",
+    "iconv-lite": "^0.4.7",
+    "request": "^2.53.0",
+    "cron": "^1.0.6",
+    "mongodb": "^1.4.31"
+  }
+}
