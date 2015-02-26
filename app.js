@@ -18,8 +18,9 @@ var words = ['who+', 'what+', 'when+', 'where+', 'why+', 'how+'];
 var dailyResults = [];
 var wordIndex = 0;
 
+// THis is defaulting to UTC time on the server
 var rule = new schedule.RecurrenceRule();
-rule.hour = 20;
+rule.hour = 1;
 rule.minute = 0;
 
 var j = schedule.scheduleJob(rule, function(){
