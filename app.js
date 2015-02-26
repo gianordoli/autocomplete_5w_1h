@@ -87,62 +87,32 @@ function nextIteration(){
 	// New word...
 	wordIndex ++;
 	if(wordIndex < words.length){
-		// var msg = letters[letterIndex] + ', ';
-		// saveLog(msg);
-		// setTimeout(function(){	// Delay to prevent Google's shut down		
-			callAutocomplete(letters[letterIndex], services[serviceIndex], countries[countryIndex]);
-		// }, 500);
+		console.log(words[wordIndex]);
+		setTimeout(function(){	// Delay to prevent Google's shut down		
+			callAutocomplete(words[wordIndex]);
+		}, 500);
 	
 	}else{
 
-		// New service...
-		letterIndex = 0;
-		serviceIndex ++;
-		if (serviceIndex < services.length) {
-			var msg = services[serviceIndex].site + ', ';
-			saveLog(msg);
-			// setTimeout(function(){	// Delay to prevent Google's shut down
-				callAutocomplete(letters[letterIndex], services[serviceIndex], countries[countryIndex]);
-			// }, 500);
-	
-		}else{
-			
-			// Save data / new country
-			serviceIndex  = 0;
-			countryIndex ++;
-			var msg = '\nFinished scraping ' +
-					  countries[countryIndex - 1].domain;
-			saveLog(msg);
-			console.log(msg);
+		// Save JSON
+		saveToJSON(dailyResults, function(err){
 
-			// Save JSON
-			saveToJSON(countries[countryIndex - 1], function(err){
+			if(!err){
+				var msg = '\nSaved JSON file.';
+				console.log(msg);
 
-				if(!err){
-					var msg = '\nSaved JSON file.';
-					saveLog(msg);
-					console.log(msg);
+				// Save mongoDB
+				saveToMongoDB(function(err){
 
-					// Save mongoDB
-					saveToMongoDB(function(err){
+					if(!err){
+						var msg = '\nSaved to mongoDB.' +
+								  '\n--------------------------------------------';
+						console.log(msg);
+					}
+				});
+			}
+		});
 
-						if(!err){
-							var msg = '\nSaved to mongoDB.' +
-									  '\n--------------------------------------------';
-							saveLog(msg);
-							console.log(msg);
-
-							// New country
-							if(countryIndex < countries.length){
-								setTimeout(function(){
-									restart(false);	// no need to reset letter and service
-								}, 120000);
-							}
-						}
-					});
-				}
-			});
-		}
 	}	
 }
 
@@ -182,16 +152,11 @@ function createRecord(query, suggestions, callback){
 }
 
 // Saves results to JSON file
-function saveToJSON(country, callback){
+function saveToJSON(obj, callback){
 	console.log('Saving data to JSON file.')
 	var date = new Date();
 	var timestamp = date.getTime();
-	var domain = country.domain;
-	while(domain.indexOf('.') > -1){
-		domain = domain.replace('.', '_');
-	}
-	var file = 'db/data_'+domain+'_'+timestamp+'.json'
-	var obj = dailyResults;
+	var file = 'db/data_'+timestamp+'.json'
 	 
 	jf.writeFile(file, obj, function(err) {
 	  // console.log(err);
@@ -208,7 +173,7 @@ function saveToJSON(country, callback){
 function saveToMongoDB(callback){
 	console.log('Saving data to mongoDB.')
 
-	MongoClient.connect('mongodb://127.0.0.1:27017/autocomplete', function(err, db) {
+	MongoClient.connect('mongodb://127.0.0.1:27017/5w_1h', function(err, db) {
 		console.log('Connecting to DB...');
 		if(err) throw err;
 		console.log('Connected.');
