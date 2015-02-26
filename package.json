@@ -18,10 +18,9 @@
   "homepage": "https://github.com/gianordoli/autocomplete_5w_1h",
   "dependencies": {
     "jsonfile": "^2.0.0",
-    "underscore": "^1.8.2",
     "iconv-lite": "^0.4.7",
     "request": "^2.53.0",
-    "cron": "^1.0.6",
-    "mongodb": "^1.4.31"
+    "mongodb": "^1.4.31",
+    "node-schedule": "^0.2.1"
   }
 }

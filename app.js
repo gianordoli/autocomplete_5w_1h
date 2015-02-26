@@ -5,8 +5,7 @@ var request = require('request'),
 	  iconv = require('iconv-lite'),
 MongoClient = require('mongodb').MongoClient,
      format = require('util').format,
-	CronJob = require('cron').CronJob
-		  _ = require('underscore');
+   schedule = require('node-schedule');
 
 console.log('--------------------------------------------');
 console.log('App started running');
@@ -19,28 +18,15 @@ var words = ['who+', 'what+', 'when+', 'where+', 'why+', 'how+'];
 var dailyResults = [];
 var wordIndex = 0;
 
-// new CronJob('0 0 2 * * *', function(){
-	restart(true);
-	// var now = new Date();
-	// console.log(now.getHours() + ':' + now.getMinutes());
-// }, null, true, 'UTC');
+var rule = new schedule.RecurrenceRule();
+rule.hour = 20;
+rule.minute = 0;
 
+var j = schedule.scheduleJob(rule, function(){
+    callAutocomplete(words[wordIndex]);
+});
 
 /*-------------------- MAIN FUNCTIONS --------------------*/
-
-// This is used both to START (1st time) and RESTART the calls
-// Latter might be due to:
-// a) Finished scraping a given country
-// (in that case, it wouldn't be necessary to reset the variables...
-// b) errorCount > 5, so skip to the next country
-function restart(resetVars){
-	if(resetVars){
-		letterIndex = 0;
-		serviceIndex = 0;		
-	}
-	dailyResults = [];
-	callAutocomplete(words[wordIndex]);
-}
 
 function callAutocomplete(query){
 	console.log('Called callAutocomplete.')
@@ -87,7 +73,7 @@ function nextIteration(){
 	// New word...
 	wordIndex ++;
 	if(wordIndex < words.length){
-		console.log(words[wordIndex]);
+		// console.log(words[wordIndex]);
 		setTimeout(function(){	// Delay to prevent Google's shut down		
 			callAutocomplete(words[wordIndex]);
 		}, 500);
