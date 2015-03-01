@@ -5,7 +5,7 @@ var request = require('request'),
 	  iconv = require('iconv-lite'),
 MongoClient = require('mongodb').MongoClient,
      format = require('util').format,
-   schedule = require('node-schedule');
+    CronJob = require('cron').CronJob;
 
 console.log('--------------------------------------------');
 console.log('App started running');
@@ -17,15 +17,15 @@ var words = ['who+', 'what+', 'when+', 'where+', 'why+', 'how+'];
 // All results from this day
 var dailyResults = [];
 var wordIndex = 0;
+var isRunning = false;
 
-// THis is defaulting to UTC time on the server
-var rule = new schedule.RecurrenceRule();
-rule.hour = 1;
-rule.minute = 0;
-
-var j = schedule.scheduleJob(rule, function(){
-    callAutocomplete(words[wordIndex]);
-});
+new CronJob('* 15 16 * * *', function(){
+	// console.log(new Date());
+	if(!isRunning){
+		callAutocomplete(words[wordIndex]);
+		isRunning = true;		
+	}
+}, null, true, 'UTC');
 
 /*-------------------- MAIN FUNCTIONS --------------------*/
 
@@ -77,7 +77,7 @@ function nextIteration(){
 		// console.log(words[wordIndex]);
 		setTimeout(function(){	// Delay to prevent Google's shut down		
 			callAutocomplete(words[wordIndex]);
-		}, 500);
+		}, 15000);
 	
 	}else{
 
@@ -95,6 +95,8 @@ function nextIteration(){
 						var msg = '\nSaved to mongoDB.' +
 								  '\n--------------------------------------------';
 						console.log(msg);
+
+						isRunning = false;
 					}
 				});
 			}
