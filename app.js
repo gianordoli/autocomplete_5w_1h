@@ -19,7 +19,9 @@ var dailyResults = [];
 var wordIndex = 0;
 var isRunning = false;
 
-new CronJob('* 15 16 * * *', function(){
+console.log(new Date());
+
+new CronJob('* 35 16 * * *', function(){
 	// console.log(new Date());
 	if(!isRunning){
 		callAutocomplete(words[wordIndex]);
@@ -127,8 +129,14 @@ function createRecord(query, suggestions, callback){
 	// console.log(suggestions);
 	var obj;
 	if(suggestions.length > 0){	
+		var now = new Date();
+		now.setHours(0);
+		now.setMinutes(0);
+		now.setSeconds(0);
+		now.setMilliseconds(0);
+
 		obj = {
-			date: new Date(),
+			date: now,
 			word: query.substring(0, query.length - 1),
 			results: suggestions
 			// results: suggestionToObj(service, suggestions)
