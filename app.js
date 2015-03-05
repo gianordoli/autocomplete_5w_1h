@@ -21,7 +21,7 @@ var isRunning = false;
 
 console.log(new Date());
 
-new CronJob('* 40 04 * * *', function(){
+new CronJob('* 50 04 * * *', function(){
 	// console.log(new Date());
 	if(!isRunning){
 		callAutocomplete(words[wordIndex]);
